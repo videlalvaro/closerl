@@ -15,19 +15,19 @@
 (defn otp-mbox
   "Creates an OtpMbox"
   ([node]
-    (. node createMbox))
+    (.createMbox node ))
   ([node name]
-    (. node createMbox name)))
+    (.createMbox node name)))
     
 (defn otp-register-name
   "Registers the mbox name"
   [mbox name]
-  (. mbox registerName name))
+  (.registerName mbox name))
   
 (defn otp-ping
   "Pings a remote Erlang node"
   [node remote tmo]
-  (. node ping remote tmo))
+  (.ping node remote tmo))
               
 (defn otp-self 
   "Creates OtpSelf with name & cookie"
@@ -44,16 +44,16 @@
 (defn connect
   "Connects to Erlang node"
   [s peer]
-  (. s connect peer))
+  (.connect s peer))
   
 (defn otp-rpc-call
   "Performs a RPC call to remote node"
   ([connection m f]
-    (. connection sendRPC m f (OtpErlangList.)))
+    (.sendRPC connection m f (OtpErlangList.)))
   ([connection m f a]
-    (. connection sendRPC m f a)))
+    (.sendRPC connection m f a)))
   
 (defn otp-receive
   "Receive result from RPC call"
   [connection]
-  (. connection receiveRPC))
+  (.receiveRPC connection))
