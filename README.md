@@ -20,7 +20,7 @@ Then at the Clojure repl:
 
     (def peer (otp-peer "a@mrhyde"))
 
-Once you got the nodes you can connect them:
+Once we have the nodes we can try to connect them:
 
     (def conn (otp-connect self peer))
 
@@ -40,4 +40,4 @@ FIXME: write
 
 ## License ##
 
-MIT
+MIT - See LICENSE
