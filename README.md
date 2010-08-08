@@ -41,3 +41,9 @@ FIXME: write
 ## License ##
 
 MIT - See LICENSE
+
+## TODO ##
+
+- Write marshaling functions
+- Write several RPC and Receive functions
+- Write send to PID and send to name functions
