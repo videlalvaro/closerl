@@ -10,7 +10,7 @@
 (defn otp-node
   "Creates an OtpNode"
   [node-name]
-  (OtpNode. node-node))
+  (OtpNode. node-name))
   
 
 (defn otp-mbox
