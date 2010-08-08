@@ -1,5 +1,5 @@
-(ns erlang.core-test
-  (:use [erlang.core] :reload-all)
+(ns closerl.core-test
+  (:use [closerl.core] :reload-all)
   (:use [clojure.test]))
 
 (deftest replace-me ;; FIXME: write
