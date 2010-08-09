@@ -30,13 +30,13 @@ Then we do a rpc_call to obtain the date on the remote node:
 
 And we call receive to fetch the reply:
 
-    (otp-receive)
+    (otp-receive conn)
 
 For the above code to work you will need the JInterface .jar in your java path.
 
 ## Installation ##
 
-FIXME: write
+    mvn install:install-file -DgroupId=com.ericsson.otp -DartifactId=erlang -Dversion=1.5.3 -Dpackaging=jar -Dfile=/usr/local/lib/erlang/lib/jinterface-1.5.3/priv/OtpErlang.jar
 
 ## License ##
 
