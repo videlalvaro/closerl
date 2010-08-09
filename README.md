@@ -12,7 +12,9 @@ First launch erlang with the following command:
 
     erl -sname a
 
-Then at the Clojure repl:
+Start the Clojure REPL
+
+Then at the Clojure REPL:
 
     (use 'closerl.core)
 
@@ -32,11 +34,17 @@ And we call receive to fetch the reply:
 
     (otp-receive conn)
 
-For the above code to work you will need the JInterface .jar in your java path.
-
 ## Installation ##
 
+Use mvn to install JInterface. Adapt the following command to suit your specific configuration
+
     mvn install:install-file -DgroupId=com.ericsson.otp -DartifactId=erlang -Dversion=1.5.3 -Dpackaging=jar -Dfile=/usr/local/lib/erlang/lib/jinterface-1.5.3/priv/OtpErlang.jar
+
+Obtain the *closerl* source code
+
+    git clone git@github.com:videlalvaro/closerl.git
+    cd closerl
+    lein deps
 
 ## License ##
 
