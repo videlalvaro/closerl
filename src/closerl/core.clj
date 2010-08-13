@@ -1,10 +1,24 @@
 (ns closerl.core
   (:import (com.ericsson.otp.erlang
               OtpNode
-              OtpSelf 
-              OtpErlangList 
-              OtpErlangObject 
-              OtpPeer)))
+              OtpSelf
+              OtpPeer
+              ;; Types
+              OtpErlangObject
+              OtpErlangBoolean
+              OtpErlangAtom
+              OtpErlangBinary
+              OtpErlangChar
+              OtpErlangByte
+              OtpErlangShort
+              OtpErlangUShort
+              OtpErlangInt
+              OtpErlangUInt
+              OtpErlangLong
+              OtpErlangFloat
+              OtpErlangDouble
+              OtpErlangList
+              OtpErlangTuple)))
 
 ;; OtpNode wrapper
 (defn otp-node
@@ -81,3 +95,33 @@
   "Receive result from RPC call"
   [connection]
   (.receiveRPC connection))
+
+;; Marshalling
+;; Based on trixx
+(defmulti otp-value class)
+
+(defmethod otp-value OtpErlangBoolean [o] (.booleanotp-value o))
+(defmethod otp-value OtpErlangAtom    [o] (.atomotp-value o))
+
+(defmethod otp-value OtpErlangBinary  [o] (String. (.binaryotp-value o)))
+
+(defmethod otp-value OtpErlangChar    [o] (Integer/parseInt (str o)))
+(defmethod otp-value OtpErlangByte    [o] (Integer/parseInt (str o)))
+(defmethod otp-value OtpErlangShort   [o] (Integer/parseInt (str o)))
+(defmethod otp-value OtpErlangUShort  [o] (Integer/parseInt (str o)))
+(defmethod otp-value OtpErlangInt     [o] (Integer/parseInt (str o)))
+(defmethod otp-value OtpErlangUInt    [o] (Integer/parseInt (str o)))
+(defmethod otp-value OtpErlangLong    [o]
+  (if (.isLong o)
+    (long o)
+    (.bigIntegerotp-value o)))
+(defmethod otp-value OtpErlangFloat   [o] (float (.floatotp-value o)))
+(defmethod otp-value OtpErlangDouble  [o] (float (.floatotp-value o)))
+(defmethod otp-value OtpErlangList    [o] (with-meta (map otp-value (.elements o)) {:otp-type "List"}))
+(defmethod otp-value OtpErlangTuple   [o] (with-meta (map otp-value (.elements o)) {:otp-type "Tuple"}))
+(defmethod otp-value nil              [o] "")
+(defmethod otp-value OtpErlangObject  [o] o)
+
+(defmulti  as-seq class)
+(defmethod as-seq OtpErlangList  [o] (seq (.elements o)))
+(defmethod as-seq OtpErlangTuple [o] (seq (.elements o)))
