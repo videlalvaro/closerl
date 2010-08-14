@@ -42,7 +42,7 @@ Use mvn to install JInterface. Adapt the following command to suit your specific
 
 Obtain the *closerl* source code
 
-    git clone git@github.com:videlalvaro/closerl.git
+    git clone http://github.com/videlalvaro/closerl.git
     cd closerl
     lein deps
 
