@@ -56,28 +56,28 @@
     
 (defn otp-accept
   "Accept an incoming connection from a remote node."
-  [s]
-  (.accept s))
+  [self]
+  (.accept self))
 
 (defn otp-connect
   "Open a connection to a remote node."
-  [s peer]
-  (.connect s peer))
+  [self peer]
+  (.connect self peer))
   
 (defn otp-pid
   "Get the Erlang PID that will be used as the sender id in all 'anonymous' messages sent by this node."
-  [s]
-  (.pid s))
+  [self]
+  (.pid self))
   
 (defn otp-publish-port
   "Make public the information needed by remote nodes that may wish to connect to this one."
-  [s]
-  (.publishPort s))
+  [self]
+  (.publishPort self))
   
 (defn otp-unpublish-port
   "Unregister the server node's name and port number from the Erlang port mapper, thus preventing any new connections from remote nodes."
-  [s]
-  (.unPublishPort s))
+  [self]
+  (.unPublishPort self))
   
 (defn otp-peer
   "Initializes peer"
@@ -98,27 +98,31 @@
 
 ;; Marshalling
 ;; Based on trixx
+(defn parse-integer [s]
+    (try (Integer/parseInt s) 
+         (catch NumberFormatException nfe 0)))
+
 (defmulti otp-value class)
 
-(defmethod otp-value OtpErlangBoolean [o] (.booleanotp-value o))
-(defmethod otp-value OtpErlangAtom    [o] (.atomotp-value o))
+(defmethod otp-value OtpErlangBoolean [o] (.booleanValue o))
+(defmethod otp-value OtpErlangAtom    [o] (.atomValue o))
 
-(defmethod otp-value OtpErlangBinary  [o] (String. (.binaryotp-value o)))
+(defmethod otp-value OtpErlangBinary  [o] (String. (.binaryValue o)))
 
-(defmethod otp-value OtpErlangChar    [o] (Integer/parseInt (str o)))
-(defmethod otp-value OtpErlangByte    [o] (Integer/parseInt (str o)))
-(defmethod otp-value OtpErlangShort   [o] (Integer/parseInt (str o)))
-(defmethod otp-value OtpErlangUShort  [o] (Integer/parseInt (str o)))
-(defmethod otp-value OtpErlangInt     [o] (Integer/parseInt (str o)))
-(defmethod otp-value OtpErlangUInt    [o] (Integer/parseInt (str o)))
+(defmethod otp-value OtpErlangChar    [o] (parse-integer (str o)))
+(defmethod otp-value OtpErlangByte    [o] (parse-integer (str o)))
+(defmethod otp-value OtpErlangShort   [o] (parse-integer (str o)))
+(defmethod otp-value OtpErlangUShort  [o] (parse-integer (str o)))
+(defmethod otp-value OtpErlangInt     [o] (parse-integer (str o)))
+(defmethod otp-value OtpErlangUInt    [o] (parse-integer (str o)))
 (defmethod otp-value OtpErlangLong    [o]
   (if (.isLong o)
     (long o)
-    (.bigIntegerotp-value o)))
-(defmethod otp-value OtpErlangFloat   [o] (float (.floatotp-value o)))
-(defmethod otp-value OtpErlangDouble  [o] (float (.floatotp-value o)))
-(defmethod otp-value OtpErlangList    [o] (with-meta (map otp-value (.elements o)) {:otp-type "List"}))
-(defmethod otp-value OtpErlangTuple   [o] (with-meta (map otp-value (.elements o)) {:otp-type "Tuple"}))
+    (.bigIntegerValue o)))
+(defmethod otp-value OtpErlangFloat   [o] (float (.floatValue o)))
+(defmethod otp-value OtpErlangDouble  [o] (float (.floatValue o)))
+(defmethod otp-value OtpErlangList    [o] (with-meta (map value (.elements o)) {:otp-type "List"}))
+(defmethod otp-value OtpErlangTuple   [o] (with-meta (map value (.elements o)) {:otp-type "Tuple"}))
 (defmethod otp-value nil              [o] "")
 (defmethod otp-value OtpErlangObject  [o] o)
 
