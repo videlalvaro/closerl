@@ -117,15 +117,29 @@
 (defmethod otp-value OtpErlangUInt    [o] (parse-integer (str o)))
 (defmethod otp-value OtpErlangLong    [o]
   (if (.isLong o)
-    (long o)
-    (.bigIntegerValue o)))
+      (.longValue  o)
+      (.bigIntegerValue o)))
 (defmethod otp-value OtpErlangFloat   [o] (float (.floatValue o)))
 (defmethod otp-value OtpErlangDouble  [o] (float (.floatValue o)))
-(defmethod otp-value OtpErlangList    [o] (with-meta (map value (.elements o)) {:otp-type "List"}))
-(defmethod otp-value OtpErlangTuple   [o] (with-meta (map value (.elements o)) {:otp-type "Tuple"}))
+(defmethod otp-value OtpErlangList    [o] (with-meta (map otp-value (.elements o)) {:otp-type "List"}))
+(defmethod otp-value OtpErlangTuple   [o] (with-meta (map otp-value (.elements o)) {:otp-type "Tuple"}))
 (defmethod otp-value nil              [o] "")
 (defmethod otp-value OtpErlangObject  [o] o)
 
 (defmulti  as-seq class)
 (defmethod as-seq OtpErlangList  [o] (seq (.elements o)))
 (defmethod as-seq OtpErlangTuple [o] (seq (.elements o)))
+
+
+
+(defn otp-long [v] (OtpErlangLong. (long v)))
+(defn otp-tuple [& args]
+  (let [msg (into-array OtpErlangObject args)
+        ]
+    (OtpErlangTuple. msg)
+   ))
+  
+;OtpErlangObject[] msg = new OtpErlangObject[2];
+;msg[0] = mbox.self();
+;msg[1] = new OtpErlangAtom("hello, world");
+;OtpErlangTuple tuple = new OtpErlangTuple(msg);
