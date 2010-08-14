@@ -133,15 +133,20 @@
 (defmethod as-seq OtpErlangTuple [o] (seq (.elements o)))
 
 
+;;Clojure to OtpErlang coercion
+
+(defn otp-double [v] (OtpErlangDouble. (double v)))
 
 (defn otp-long [v] (OtpErlangLong. (long v)))
+
+(defn otp-string [#^String v] (OtpErlangString. v))
+
+(defn otp-binary [#^String v] (OtpErlangBinary. (.getBytes v)))
+
+(defn otp-atom [v] (OtpErlangAtom. v))
+
 (defn otp-tuple [& args]
-  (let [msg (into-array OtpErlangObject args)
-        ]
-    (OtpErlangTuple. msg)
-   ))
-  
-;OtpErlangObject[] msg = new OtpErlangObject[2];
-;msg[0] = mbox.self();
-;msg[1] = new OtpErlangAtom("hello, world");
-;OtpErlangTuple tuple = new OtpErlangTuple(msg);
+  (OtpErlangTuple. (into-array OtpErlangObject args)))
+
+(defn otp-list [& args]
+  (OtpErlangList. (into-array OtpErlangObject args)))
