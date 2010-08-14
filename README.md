@@ -34,6 +34,8 @@ And we call receive to fetch the reply:
 
     (otp-receive conn)
 
+For more details see introductory blogpost [here](http://videlalvaro.github.com/2010/08/closer-clojure-erlang-bridge.html)
+
 ## Installation ##
 
 Use mvn to install JInterface. Adapt the following command to suit your specific configuration
