@@ -50,6 +50,8 @@ Obtain the *closerl* source code
 
 MIT - See LICENSE
 
+The code for marshaling Java to Clojure is based on [trixx](http://github.com/aaronfeng/trixx)
+
 ## TODO ##
 
 - Write marshaling functions
