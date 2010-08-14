@@ -97,6 +97,14 @@
   [connection]
   (.receiveRPC connection))
 
+(defn otp-rpc-and-receive
+  "Send a RPC request, receive the message and returns it
+  converted as a Clojure type"
+  [connection m f a]
+  (do
+    (.sendRPC connection m f a)
+    (otp-value (.receiveRPC connection))))
+
 ;; Marshalling
 ;; Based on trixx
 (defn parse-integer [s]
