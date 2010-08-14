@@ -17,6 +17,7 @@
               OtpErlangLong
               OtpErlangFloat
               OtpErlangDouble
+              OtpErlangString
               OtpErlangList
               OtpErlangTuple)))
 
@@ -121,6 +122,7 @@
       (.bigIntegerValue o)))
 (defmethod otp-value OtpErlangFloat   [o] (float (.floatValue o)))
 (defmethod otp-value OtpErlangDouble  [o] (float (.floatValue o)))
+(defmethod otp-value OtpErlangString  [o] (str (.stringValue o)))
 (defmethod otp-value OtpErlangList    [o] (with-meta (map otp-value (.elements o)) {:otp-type "List"}))
 (defmethod otp-value OtpErlangTuple   [o] (with-meta (map otp-value (.elements o)) {:otp-type "Tuple"}))
 (defmethod otp-value nil              [o] "")
