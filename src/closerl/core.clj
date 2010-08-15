@@ -1,6 +1,7 @@
 (ns closerl.core
   (:import (com.ericsson.otp.erlang
               OtpNode
+              OtpMbox
               OtpSelf
               OtpPeer
               OtpConnection
@@ -69,20 +70,20 @@
 
 (defn otp-mbox
   "Creates an OtpMbox"
-  ([node]
+  ([#^OtpNode node]
     (.createMbox node ))
-  ([node name]
+  ([#^OtpNode node name]
     (.createMbox node name)))
     
 (defn otp-register-name
   "Registers the mbox name"
-  [mbox name]
+  [#^OtpMbox mbox name]
   (.registerName mbox name))
   
 (defn otp-receive
   "Receives a message. The process will block while waiting"
-  ([mbox] (.receive mbox))
-  ([mbox tmo] (.receive mbox tmo)))
+  ([#^OtpMbox mbox] (.receive mbox))
+  ([#^OtpMbox mbox tmo] (.receive mbox tmo)))
               
 ;; OtpSelf wrapper
 (defn otp-self 
