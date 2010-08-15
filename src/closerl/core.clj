@@ -7,6 +7,7 @@
               OtpConnection
               ;; Types
               OtpErlangObject
+              OtpErlangPid
               OtpErlangBoolean
               OtpErlangAtom
               OtpErlangBinary
@@ -79,6 +80,15 @@
   "Registers the mbox name"
   [#^OtpMbox mbox name]
   (.registerName mbox name))
+
+(defn otp-send-to-pid
+  ([#^OtpMbox mbox #^OtpErlangPid pid #^OtpErlangObject msg]
+    (.send mbox pid msg)))
+(defn otp-send-to-name
+  ([#^OtpMbox mbox #^String name #^OtpErlangObject msg]
+    (.send mbox name msg))
+  ([#^OtpMbox mbox #^String name #^String node #^OtpErlangObject msg]
+    (.send mbox name msg)))
   
 (defn otp-receive
   "Receives a message. The process will block while waiting"
