@@ -32,7 +32,7 @@ Then we do a rpc_call to obtain the date on the remote node:
 
 And we call receive to fetch the reply:
 
-    (otp-receive conn)
+    (otp-rpc-receive conn)
 
 For more details see introductory blogpost [here](http://videlalvaro.github.com/2010/08/closer-clojure-erlang-bridge.html)
 

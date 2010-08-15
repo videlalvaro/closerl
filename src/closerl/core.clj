@@ -3,6 +3,7 @@
               OtpNode
               OtpSelf
               OtpPeer
+              OtpConnection
               ;; Types
               OtpErlangObject
               OtpErlangBoolean
@@ -121,20 +122,21 @@
   
 (defn otp-rpc-call
   "Performs a RPC call to remote node"
-  ([connection m f]
+  ([#^OtpConnection connection m f]
     (.sendRPC connection m f (OtpErlangList.)))
-  ([connection m f a]
+  ([#^OtpConnection connection m f a]
     (.sendRPC connection m f a)))
   
-(defn otp-receive
-  "Receive result from RPC call"
-  [connection]
+(defn otp-rpc-receive
+  "Receive result from a RPC call.
+  The process will block while waiting."
+  [#^OtpConnection connection]
   (.receiveRPC connection))
 
 (defn otp-rpc-and-receive
   "Send a RPC request, receive the message and returns it
   converted as a Clojure type"
-  [connection m f a]
+  [#^OtpConnection connection m f a]
   (do
     (.sendRPC connection m f a)
     (otp-value (.receiveRPC connection))))
