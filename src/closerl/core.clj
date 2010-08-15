@@ -62,6 +62,10 @@
   [node-name]
   (OtpNode. node-name))
   
+(defn otp-ping
+  "Pings a remote Erlang node"
+  [node remote tmo]
+  (.ping node remote tmo))
 
 (defn otp-mbox
   "Creates an OtpMbox"
@@ -75,10 +79,10 @@
   [mbox name]
   (.registerName mbox name))
   
-(defn otp-ping
-  "Pings a remote Erlang node"
-  [node remote tmo]
-  (.ping node remote tmo))
+(defn otp-receive
+  "Receives a message. The process will block while waiting"
+  ([mbox] (.receive mbox))
+  ([mbox tmo] (.receive mbox tmo)))
               
 ;; OtpSelf wrapper
 (defn otp-self 
