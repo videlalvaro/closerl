@@ -94,10 +94,10 @@
   "Receives a message. The process will block while waiting"
   ([#^OtpMbox mbox] (.receive mbox))
   ([#^OtpMbox mbox tmo] (.receive mbox tmo)))
-              
+
 ;; OtpSelf wrapper
 (defn otp-self 
-  "Creates OtpSelf with name & cookie"
+  "Creates a OtpSelf instance with name & cookie"
   ([node-name]
     (OtpSelf. node-name))
   ([node-name cookie]
