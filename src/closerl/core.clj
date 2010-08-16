@@ -30,34 +30,63 @@
     (try (Integer/parseInt s) 
          (catch NumberFormatException nfe 0)))
 
-(defmulti otp-value class)
-
-(defmethod otp-value OtpErlangBoolean [o] (.booleanValue o))
-(defmethod otp-value OtpErlangAtom    [o] (.atomValue o))
-
-(defmethod otp-value OtpErlangBinary  [o] (String. (.binaryValue o)))
-
-(defmethod otp-value OtpErlangChar    [o] (parse-integer (str o)))
-(defmethod otp-value OtpErlangByte    [o] (parse-integer (str o)))
-(defmethod otp-value OtpErlangShort   [o] (parse-integer (str o)))
-(defmethod otp-value OtpErlangUShort  [o] (parse-integer (str o)))
-(defmethod otp-value OtpErlangInt     [o] (parse-integer (str o)))
-(defmethod otp-value OtpErlangUInt    [o] (parse-integer (str o)))
-(defmethod otp-value OtpErlangLong    [o]
-  (if (.isLong o)
-      (.longValue  o)
-      (.bigIntegerValue o)))
-(defmethod otp-value OtpErlangFloat   [o] (float (.floatValue o)))
-(defmethod otp-value OtpErlangDouble  [o] (float (.floatValue o)))
-(defmethod otp-value OtpErlangString  [o] (str (.stringValue o)))
-(defmethod otp-value OtpErlangList    [o] (with-meta (map otp-value (.elements o)) {:otp-type "List"}))
-(defmethod otp-value OtpErlangTuple   [o] (with-meta (map otp-value (.elements o)) {:otp-type "Tuple"}))
-(defmethod otp-value nil              [o] "")
-(defmethod otp-value OtpErlangObject  [o] o)
-
-(defmulti  as-seq class)
-(defmethod as-seq OtpErlangList  [o] (seq (.elements o)))
-(defmethod as-seq OtpErlangTuple [o] (seq (.elements o)))
+(defprotocol FromErlang
+  (otp-value [val]))
+  
+(extend-protocol FromErlang
+  OtpErlangBoolean
+  (otp-value [o] (.booleanValue o))
+  
+  OtpErlangAtom
+  (otp-value [o] (.atomValue o))
+  
+  OtpErlangBinary
+  (otp-value [o] (String. (.binaryValue o)))
+  
+  OtpErlangChar
+  (otp-value [o] (parse-integer (str o)))
+  
+  OtpErlangByte
+  (otp-value [o] (parse-integer (str o)))
+  
+  OtpErlangShort
+  (otp-value [o] (parse-integer (str o)))
+  
+  OtpErlangUShort
+  (otp-value [o] (parse-integer (str o)))
+  
+  OtpErlangInt
+  (otp-value [o] (parse-integer (str o)))
+  
+  OtpErlangUInt
+  (otp-value [o] (parse-integer (str o)))
+  
+  OtpErlangLong
+  (otp-value [o]
+    (if (.isLong o)
+        (.longValue  o)
+        (.bigIntegerValue o)))
+  
+  OtpErlangFloat
+  (otp-value [o] (float (.floatValue o)))
+  
+  OtpErlangDouble
+  (otp-value [o] (float (.floatValue o)))
+  
+  OtpErlangString
+  (otp-value [o] (str (.stringValue o)))
+  
+  OtpErlangList
+  (otp-value [o] (with-meta (map otp-value (.elements o)) {:otp-type "List"}))
+  
+  OtpErlangTuple
+  (otp-value [o] (with-meta (map otp-value (.elements o)) {:otp-type "Tuple"}))
+  
+  OtpErlangObject
+  (otp-value [o] o)
+  
+  nil
+  (otp-value [o] ""))
 
 (defn otp-node
   "Creates an OtpNode"
