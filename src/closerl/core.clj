@@ -90,8 +90,10 @@
 
 (defn otp-node
   "Creates an OtpNode"
-  [node-name]
+  ([node-name]
   (OtpNode. node-name))
+  ([node-name cookie]
+  (OtpNode. node-name cookie)))
   
 (defn otp-ping
   "Pings a remote Erlang node"
