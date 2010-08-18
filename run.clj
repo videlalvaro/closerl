@@ -27,7 +27,7 @@
     ))
         
 (defn reducer [vs]
-  (let [the-vals (apply concat (map (fn [avalue] (second avalue)) vs))]
+  (let [the-vals (apply concat vs)]
     (do
       (println the-vals)
   (reduce (fn [m v]
@@ -44,9 +44,8 @@
     (println (str "got data: " data " command: " command))
   (if (= command "map")
     (apply closerl/otp-list (map-fn (re-seq #"\w+" (first data))))
-    (apply closerl/otp-list 
-        (red-fn data)
-      ))))
+    (closerl/otp-tuple (closerl/otp-atom "struct") (apply closerl/otp-list (red-fn data)))
+        )))
 
 (defn dummy-reply []
   (closerl/otp-list 
@@ -63,10 +62,7 @@
         (println (str "sending reply" reply))
         (closerl/otp-send-to-pid mbox pid
                    (closerl/otp-tuple (closerl/otp-atom "clj")
-                     (closerl/otp-list 
-                       (closerl/otp-tuple (closerl/otp-atom "struct") 
-                        reply ;; result list
-                        ))
+                     (closerl/otp-list reply)
                    ))
       )
       (recur mbox)))
