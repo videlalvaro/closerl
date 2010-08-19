@@ -13,6 +13,10 @@
 ;
 ;(println (.ping mbox "dev3@mrhyde" 2000))
 
+(defn dummy-reply []
+  (closerl/otp-list 
+    (closerl/otp-tuple (closerl/otp-binary "a") (closerl/otp-long 1))))
+
 (defn map-fn [words]
   (do
     (println words)
@@ -46,26 +50,20 @@
     (apply closerl/otp-list (map-fn (re-seq #"\w+" (first data))))
     (closerl/otp-tuple (closerl/otp-atom "struct") (apply closerl/otp-list (red-fn data)))
         )))
-
-(defn dummy-reply []
-  (closerl/otp-list 
-    (closerl/otp-tuple (closerl/otp-binary "a") (closerl/otp-long 1))))
+        
+(defn receive-riak-request [mbox]
+  (closerl/proplist-to-map (closerl/otp-value (closerl/otp-receive mbox))))
+  
+(defn reply-to-riak [mbox pid reply]
+  (do
+    (println (str "sending reply" reply))
+    (closerl/otp-send-to-pid mbox pid
+      (closerl/otp-tuple (closerl/otp-atom "clj") (closerl/otp-list reply)))))
 
 (defn mapred-server [mbox]
-  (let [m (closerl/otp-value (closerl/otp-receive mbox))
-        pid (first m)
-        command (second m)
-        data (nth m 2)
-        reply (get-reply command data)
-        ]
-      (do
-        (println (str "sending reply" reply))
-        (closerl/otp-send-to-pid mbox pid
-                   (closerl/otp-tuple (closerl/otp-atom "clj")
-                     (closerl/otp-list reply)
-                   ))
-      )
+  (let [{pid :pid, command :command, r-value :r-value} (receive-riak-request mbox)]
+      (reply-to-riak mbox pid (get-reply command r-value))
       (recur mbox)))
 
-(println "running map red server")
+(println "running m/r server")
 (mapred-server mbox)
