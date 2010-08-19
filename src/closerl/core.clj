@@ -94,6 +94,11 @@
     [{a, 1}, {b, 2}, {c, 3}] or {{a, 1}, {b, 2}, {c, 3}} in Erlang will become:
     {:a 1, :b 2, :c 3}"
   (reduce (fn [my-map my-value] (assoc my-map (keyword (first my-value)) (second my-value))) {} pl))
+  
+(defn from-record [r]
+  (let [k (keyword (first r))
+       v (proplist-to-map (second r))]
+  {k v}))
 
 (defn otp-node
   "Creates an OtpNode"
