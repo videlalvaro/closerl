@@ -87,11 +87,11 @@
   
   nil
   (otp-value [o] ""))
-  
+
 (defn proplist-to-map [pl]
   "Takes a property list like structure and converts it to a map.
   For example: 
-    [{a, 1}, {b, 2}, {c, 3}] or {{a, 1}, {b, 2}, {c, 3} in Erlang will become:
+    [{a, 1}, {b, 2}, {c, 3}] or {{a, 1}, {b, 2}, {c, 3}} in Erlang will become:
     {:a 1, :b 2, :c 3}"
   (reduce (fn [my-map my-value] (assoc my-map (keyword (first my-value)) (second my-value))) {} pl))
 
