@@ -8,10 +8,6 @@
 (println mbox)
 
 (println (.ping mbox "riak@mrhyde" 2000))
-;
-;(println (.ping mbox "dev2@mrhyde" 2000))
-;
-;(println (.ping mbox "dev3@mrhyde" 2000))
 
 (defn dummy-reply []
   (closerl/otp-list 
@@ -26,11 +22,9 @@
 
 (defn as-proplist [items key-fn val-fn]
   (map (fn [k v] (closerl/otp-tuple (key-fn k) (val-fn v))) (keys items) (vals items)))
-
-(defn red-fn [vs]
-  (let [v1 (apply concat (remove-not-found vs))
-        v2 (reduce (fn [m v] (assoc m (first v) (+ (get m (first v) 0) (second v)))) {} v1)]
-    (as-proplist v2 closerl/otp-binary closerl/otp-long)))
+  
+(defn get-fn [s]
+  (eval (read-string s)))
     
 (defn error-reply [msg]
   (closerl/otp-tuple (closerl/otp-atom "error") (closerl/otp-string msg)))
@@ -41,12 +35,12 @@
 (defn wrap-red-reply [reply]
   (closerl/otp-tuple (closerl/otp-atom "struct") (apply closerl/otp-list reply)))
 
-(defn get-reply [command data myfn]
+(defn get-reply [command data f]
   (do
     (println (str "got data: " data " command: " command))
   (cond 
-    (= command "map") (wrap-map-reply ((eval (read-string myfn)) data))
-    (= command "red") (wrap-red-reply (red-fn data))
+    (= command "map") (wrap-map-reply ((get-fn f) data))
+    (= command "red") (wrap-red-reply ((get-fn f) data))
       :else (error-reply (str "Unknown command: " command)))))
         
 (defn receive-riak-request [mbox]
